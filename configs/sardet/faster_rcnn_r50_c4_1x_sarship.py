@@ -152,7 +152,7 @@ test_pipeline = [
             dict(type='Collect', keys=['img'])
         ])
 ]
-batch_per_gpu = 8
+batch_per_gpu = 6
 lr = 0.001
 data = dict(
     samples_per_gpu=batch_per_gpu,
