@@ -122,7 +122,7 @@ if __name__ == '__main__':
         if not osp.exists(path):
             os.mkdir(path)
 
-    sc_dirs = {'train': "/home/sun/projects/sar/SAR_SHIP_train", 'test': "/home/sun/projects/sar/SAR_SHIP_train"}
+    sc_dirs = {'train': "/home/sun/projects/sar/SAR_SHIP_train", 'test': "/home/sun/projects/sar/SAR_SHIP_test"}
     imid_bid = {"image_id": 1, "bnd_id": 1}
     for split in ['train', 'test']:
         sc_dir = sc_dirs[split]

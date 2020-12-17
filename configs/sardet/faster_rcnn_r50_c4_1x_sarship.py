@@ -175,7 +175,7 @@ data = dict(
         ann_file='data/SAR_SHIP_coco/annotations/instances_sarship_test.json',
         img_prefix='data/SAR_SHIP_coco/test/',
         pipeline=test_pipeline))
-evaluation = dict(interval=1, metric='bbox')
+evaluation = dict(interval=50, metric='bbox')
 optimizer = dict(type='SGD', lr=lr, momentum=0.9, weight_decay=0.0001)
 optimizer_config = dict(grad_clip=None)
 lr_config = dict(
