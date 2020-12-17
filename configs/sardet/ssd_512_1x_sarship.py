@@ -132,7 +132,7 @@ train_pipeline = [
         saturation_range=(0.5, 1.5),
         hue_delta=18),
     dict(type='RandomFlip', flip_ratio=0.5),
-    dict(type='Resize', img_scale=(1024, 1024), keep_ratio=False),
+    dict(type='Resize', img_scale=(640, 640), keep_ratio=False),
     dict(type='Normalize', **img_norm_cfg),
     dict(type='DefaultFormatBundle'),
     dict(type='Collect', keys=['img', 'gt_bboxes', 'gt_labels'])
@@ -141,7 +141,7 @@ test_pipeline = [
     dict(type='LoadTiffImageFromFile', to_float32=True),
     dict(
         type='MultiScaleFlipAug',
-        img_scale=(950, 950),
+        img_scale=(640, 640),
         flip=False,
         transforms=[
             dict(type='Resize', keep_ratio=True),
@@ -152,11 +152,11 @@ test_pipeline = [
             dict(type='Collect', keys=['img'])
         ])
 ]
-batch_per_gpu = 8
-lr = 0.001
+batch_per_gpu = 3
+lr = 0.00001
 data = dict(
     samples_per_gpu=batch_per_gpu,
-    workers_per_gpu=4,
+    workers_per_gpu=batch_per_gpu,
     train=dict(
         type=dataset_type,
         classes=classes,
@@ -175,7 +175,7 @@ data = dict(
         ann_file='data/SAR_SHIP_coco/annotations/instances_sarship_test.json',
         img_prefix='data/SAR_SHIP_coco/test/',
         pipeline=test_pipeline))
-evaluation = dict(interval=20, metric='bbox')
+evaluation = dict(interval=50, metric='bbox')
 optimizer = dict(type='SGD', lr=lr, momentum=0.9, weight_decay=0.0001)
 optimizer_config = dict(grad_clip=None)
 lr_config = dict(
@@ -186,7 +186,7 @@ lr_config = dict(
     step=[200, 250])
 total_epochs = 300
 checkpoint_config = dict(interval=5)
-log_config = dict(interval=20, hooks=[dict(type='TextLoggerHook')])
+log_config = dict(interval=50, hooks=[dict(type='TextLoggerHook')])
 dist_params = dict(backend='nccl')
 log_level = 'INFO'
 load_from = None
