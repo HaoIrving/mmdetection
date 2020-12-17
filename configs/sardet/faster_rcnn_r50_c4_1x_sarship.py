@@ -152,9 +152,11 @@ test_pipeline = [
             dict(type='Collect', keys=['img'])
         ])
 ]
+batch_per_gpu = 3
+lr = 0.00001
 data = dict(
-    samples_per_gpu=2,
-    workers_per_gpu=2,
+    samples_per_gpu=batch_per_gpu,
+    workers_per_gpu=batch_per_gpu,
     train=dict(
         type=dataset_type,
         classes=classes,
@@ -174,7 +176,7 @@ data = dict(
         img_prefix='data/SAR_SHIP_coco/test/',
         pipeline=test_pipeline))
 evaluation = dict(interval=1, metric='bbox')
-optimizer = dict(type='SGD', lr=0.001, momentum=0.9, weight_decay=0.0001)
+optimizer = dict(type='SGD', lr=lr, momentum=0.9, weight_decay=0.0001)
 optimizer_config = dict(grad_clip=None)
 lr_config = dict(
     policy='step',
