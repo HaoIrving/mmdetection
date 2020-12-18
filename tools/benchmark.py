@@ -11,13 +11,14 @@ from mmdet.datasets import (build_dataloader, build_dataset,
                             replace_ImageToTensor)
 from mmdet.models import build_detector
 
+from sardet import __version__
 
 def parse_args():
     parser = argparse.ArgumentParser(description='MMDet benchmark a model')
     parser.add_argument('config', help='test config file path')
     parser.add_argument('checkpoint', help='checkpoint file')
     parser.add_argument(
-        '--log-interval', default=50, help='interval of logging')
+        '--log-interval', default=1, help='interval of logging')
     parser.add_argument(
         '--fuse-conv-bn',
         action='store_true',

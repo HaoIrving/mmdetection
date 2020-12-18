@@ -120,6 +120,7 @@ classes = ('ship',)
 # data_root = 'data/coco/'
 img_norm_cfg = dict(
     mean=[98.13131, 98.13131, 98.13131], std=[1.0, 1.0, 1.0], to_rgb=False)
+train_scale = 1024
 train_pipeline = [
     dict(type='LoadTiffImageFromFile', to_float32=True),
     dict(type='LoadAnnotations', with_bbox=True),
@@ -132,16 +133,17 @@ train_pipeline = [
         saturation_range=(0.5, 1.5),
         hue_delta=18),
     dict(type='RandomFlip', flip_ratio=0.5),
-    dict(type='Resize', img_scale=(1024, 1024), keep_ratio=False),
+    dict(type='Resize', img_scale=(train_scale, train_scale), keep_ratio=False),
     dict(type='Normalize', **img_norm_cfg),
     dict(type='DefaultFormatBundle'),
     dict(type='Collect', keys=['img', 'gt_bboxes', 'gt_labels'])
 ]
+test_scale = 500 * 1
 test_pipeline = [
     dict(type='LoadTiffImageFromFile', to_float32=True),
     dict(
         type='MultiScaleFlipAug',
-        img_scale=(950, 950),
+        img_scale=(test_scale, test_scale),
         flip=False,
         transforms=[
             dict(type='Resize', keep_ratio=True),
