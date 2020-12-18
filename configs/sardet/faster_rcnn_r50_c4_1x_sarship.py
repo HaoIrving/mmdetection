@@ -138,9 +138,10 @@ train_pipeline = [
     dict(type='DefaultFormatBundle'),
     dict(type='Collect', keys=['img', 'gt_bboxes', 'gt_labels'])
 ]
-test_scale = 500 * 1
+test_scale = 500 * 1.5
 test_pipeline = [
     dict(type='LoadTiffImageFromFile', to_float32=True),
+    dict(type='LoadAnnotations', with_bbox=True),
     dict(
         type='MultiScaleFlipAug',
         img_scale=(test_scale, test_scale),
@@ -151,7 +152,7 @@ test_pipeline = [
             dict(type='Normalize', **img_norm_cfg),
             dict(type='Pad', size_divisor=32, pad_val=0),
             dict(type='ImageToTensor', keys=['img']),
-            dict(type='Collect', keys=['img'])
+            dict(type='Collect', keys=['img', 'gt_bboxes', 'gt_labels'])
         ])
 ]
 batch_per_gpu = 6

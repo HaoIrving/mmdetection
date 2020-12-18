@@ -7,6 +7,7 @@ from mmcv import Config
 
 from mmdet.datasets.builder import build_dataset
 
+from sardet import __version__
 
 def parse_args():
     parser = argparse.ArgumentParser(description='Browse a dataset')
@@ -43,6 +44,7 @@ def retrieve_data_cfg(config_path, skip_type):
 
 
 def main():
+    import numpy as np
     args = parse_args()
     cfg = retrieve_data_cfg(args.config, args.skip_type)
 
@@ -54,7 +56,7 @@ def main():
                                 Path(item['filename']).name
                                 ) if args.output_dir is not None else None
         mmcv.imshow_det_bboxes(
-            item['img'],
+            item['img'].astype(np.uint8),
             item['gt_bboxes'],
             item['gt_labels'],
             class_names=dataset.CLASSES,

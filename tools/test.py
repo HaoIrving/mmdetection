@@ -10,12 +10,13 @@ from mmcv.parallel import MMDataParallel, MMDistributedDataParallel
 from mmcv.runner import (get_dist_info, init_dist, load_checkpoint,
                          wrap_fp16_model)
 
-from mmdet.apis import multi_gpu_test, single_gpu_test
+# from mmdet.apis import multi_gpu_test, single_gpu_test
 from mmdet.datasets import (build_dataloader, build_dataset,
                             replace_ImageToTensor)
 from mmdet.models import build_detector
 
 from sardet import __version__
+from sardet.apis import multi_gpu_test, single_gpu_test
 
 def parse_args():
     parser = argparse.ArgumentParser(
@@ -98,6 +99,11 @@ def parse_args():
 def main():
     args = parse_args()
 
+    args.show_score_thr = 0.3
+    args.show = False
+
+    args.eval = 'bbox'
+    
     assert args.out or args.eval or args.format_only or args.show \
         or args.show_dir, \
         ('Please specify at least one operation (save/eval/format/show the '
@@ -132,11 +138,11 @@ def main():
                 cfg.model.neck.rfp_backbone.pretrained = None
 
     # in case the test dataset is concatenated
-    if isinstance(cfg.data.test, dict):
-        cfg.data.test.test_mode = True
-    elif isinstance(cfg.data.test, list):
-        for ds_cfg in cfg.data.test:
-            ds_cfg.test_mode = True
+    # if isinstance(cfg.data.test, dict):
+    #     cfg.data.test.test_mode = True
+    # elif isinstance(cfg.data.test, list):
+    #     for ds_cfg in cfg.data.test:
+    #         ds_cfg.test_mode = True
 
     # init distributed env first, since logger depends on the dist info.
     if args.launcher == 'none':
