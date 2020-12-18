@@ -113,7 +113,7 @@ test_cfg = dict(
     rcnn=dict(
         score_thr=0.05,
         # nms=dict(type='nms', iou_threshold=0.03),
-        nms=dict(type='soft_nms', iou_threshold=0.005),
+        nms=dict(type='soft_nms', iou_threshold=0.01),
         max_per_img=100))
 
 dataset_type = 'CocoDataset'
@@ -139,7 +139,7 @@ train_pipeline = [
     dict(type='DefaultFormatBundle'),
     dict(type='Collect', keys=['img', 'gt_bboxes', 'gt_labels'])
 ]
-test_scale = 500 * 1.5
+test_scale = 500 * 1.8
 test_pipeline = [
     dict(type='LoadTiffImageFromFile', to_float32=True),
     dict(type='LoadAnnotations', with_bbox=True),
