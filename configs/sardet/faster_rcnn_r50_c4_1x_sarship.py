@@ -2,7 +2,7 @@ norm_cfg = dict(type='BN', requires_grad=False)
 num_classes = 1
 model = dict(
     type='FasterRCNN',
-    # pretrained='open-mmlab://detectron2/resnet50_caffe',
+    pretrained='open-mmlab://detectron2/resnet50_caffe',
     pretrained=None,
     backbone=dict(
         type='ResNet',
@@ -11,7 +11,7 @@ model = dict(
         strides=(1, 2, 2),
         dilations=(1, 1, 1),
         out_indices=(2, ),
-        # frozen_stages=1,
+        frozen_stages=1,
         norm_cfg=dict(type='BN', requires_grad=False),
         norm_eval=True,
         style='caffe'),
@@ -113,8 +113,7 @@ test_cfg = dict(
     rcnn=dict(
         score_thr=0.05,
         # nms=dict(type='nms', iou_threshold=0.03),
-        nms=dict(type='nms', iou_threshold=0.01),
-        # nms=dict(type='soft_nms', iou_threshold=0.01),
+        nms=dict(type='soft_nms', iou_threshold=0.01),
         max_per_img=100))
 
 dataset_type = 'CocoDataset'
