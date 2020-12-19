@@ -49,12 +49,20 @@ def plot_curve(log_dicts, args):
         epochs = list(log_dict.keys())
         for j, metric in enumerate(metrics):
             print(f'plot curve of {args.json_logs[i]}, metric is {metric}')
+
+            epochs_ = []
+            for idx in epochs:
+                if metric in log_dict[idx]:
+                    epochs_.append(idx)
+            epochs = epochs_
+
             if metric not in log_dict[epochs[0]]:
                 raise KeyError(
                     f'{args.json_logs[i]} does not contain metric {metric}')
 
             if 'mAP' in metric:
-                xs = np.arange(1, max(epochs) + 1)
+                # xs = np.arange(1, max(epochs) + 1)
+                xs  = np.asarray(epochs)
                 ys = []
                 for epoch in epochs:
                     ys += log_dict[epoch][metric]

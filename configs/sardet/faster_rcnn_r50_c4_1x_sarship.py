@@ -11,7 +11,7 @@ model = dict(
         strides=(1, 2, 2),
         dilations=(1, 1, 1),
         out_indices=(2, ),
-        frozen_stages=1,
+        # frozen_stages=1,
         norm_cfg=dict(type='BN', requires_grad=False),
         norm_eval=True,
         style='caffe'),
@@ -125,8 +125,12 @@ train_scale = 1024
 train_pipeline = [
     dict(type='LoadTiffImageFromFile', to_float32=True),
     dict(type='LoadAnnotations', with_bbox=True),
-    dict(type='RandomSquareCrop',
-            crop_choice=[0.3, 0.45, 0.6, 0.8, 1.0]),
+    # dict(type='RandomSquareCrop',
+    #         crop_ratio_range=[0.3, 1.0]),
+    dict(
+        type='MinIoURandomCrop',
+        min_ious=(0.1, 0.3, 0.5, 0.7, 0.9),
+        min_crop_size=0.3),
     dict(
         type='PhotoMetricDistortion',
         brightness_delta=32,
@@ -159,6 +163,8 @@ test_pipeline = [
 ]
 batch_per_gpu = 6
 lr = 0.001
+total_epochs = 600
+
 data = dict(
     samples_per_gpu=batch_per_gpu,
     workers_per_gpu=4,
@@ -188,10 +194,9 @@ lr_config = dict(
     warmup='linear',
     warmup_iters=500,
     warmup_ratio=0.001,
-    step=[200, 250])
-total_epochs = 300
+    step=[total_epochs * 2 // 3, total_epochs * 5 // 6])
 checkpoint_config = dict(interval=5)
-log_config = dict(interval=20, hooks=[dict(type='TextLoggerHook')])
+log_config = dict(interval=5, hooks=[dict(type='TextLoggerHook')])
 dist_params = dict(backend='nccl')
 log_level = 'INFO'
 load_from = None
