@@ -1,5 +1,9 @@
 cd ..
 
+bash ./tools/dist_train.sh \
+    ./configs/sardet/ssd_512_1x_sarship.py  \
+    4 \
+
 git pull origin master
 
 # bash ./tools/dist_train.sh \
