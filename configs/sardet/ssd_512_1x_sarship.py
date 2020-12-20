@@ -3,7 +3,8 @@ input_size = 512
 num_classes = 1
 model = dict(
     type='SingleStageDetector',
-    pretrained='open-mmlab://vgg16_caffe',
+    # pretrained='open-mmlab://vgg16_caffe',
+    pretrained=None,
     backbone=dict(
         type='SSDVGG',
         input_size=input_size,
@@ -53,10 +54,15 @@ dataset_type = 'CocoDataset'
 classes = ('ship',)
 img_norm_cfg = dict(
     mean=[98.13131, 98.13131, 98.13131], std=[1.0, 1.0, 1.0], to_rgb=True)
+img_fill_val = 98.13131
 train_scale = 512
 train_pipeline = [
     dict(type='LoadTiffImageFromFile', to_float32=True),
     dict(type='LoadAnnotations', with_bbox=True),
+    dict(
+        type='RandomRotate',
+        rotate_interval=10,
+        img_fill_val=img_fill_val),
     dict(
         type='PhotoMetricDistortion',
         brightness_delta=32,

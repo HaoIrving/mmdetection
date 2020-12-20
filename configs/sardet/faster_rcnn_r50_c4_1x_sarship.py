@@ -162,7 +162,7 @@ test_pipeline = [
             dict(type='Normalize', **img_norm_cfg),
             dict(type='Pad', size_divisor=32, pad_val=0),
             dict(type='ImageToTensor', keys=['img']),
-            # dict(type='Collect', keys=['img', 'gt_bboxes', 'gt_labels'])
+            # dict(type='Collect', keys=['img', 'gt_bboxes', 'gt_labels']),
             dict(type='Collect', keys=['img'])
         ])
 ]
