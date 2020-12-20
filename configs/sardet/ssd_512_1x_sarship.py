@@ -117,7 +117,7 @@ data = dict(
         ann_file='data/SAR_SHIP_coco/annotations/instances_sarship_test.json',
         img_prefix='data/SAR_SHIP_coco/test/',
         pipeline=test_pipeline))
-evaluation = dict(interval=50, metric='bbox')
+evaluation = dict(interval=20, metric='bbox')
 # optimizer
 lr = 2e-3
 optimizer = dict(type='SGD', lr=lr, momentum=0.9, weight_decay=5e-4)
@@ -130,7 +130,7 @@ lr_config = dict(
     step=[200, 250])
 total_epochs = 300
 checkpoint_config = dict(interval=5)
-log_config = dict(interval=50, hooks=[dict(type='TextLoggerHook')])
+log_config = dict(interval=5, hooks=[dict(type='TextLoggerHook')])
 dist_params = dict(backend='nccl')
 log_level = 'INFO'
 load_from = None
