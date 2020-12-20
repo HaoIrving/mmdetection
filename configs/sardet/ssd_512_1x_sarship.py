@@ -3,8 +3,8 @@ input_size = 512
 num_classes = 1
 model = dict(
     type='SingleStageDetector',
-    pretrained='open-mmlab://vgg16_caffe',
-    # pretrained=None,
+    # pretrained='open-mmlab://vgg16_caffe',
+    pretrained=None,
     backbone=dict(
         type='SSDVGG',
         input_size=input_size,
@@ -59,10 +59,10 @@ train_scale = 512
 train_pipeline = [
     dict(type='LoadTiffImageFromFile', to_float32=True),
     dict(type='LoadAnnotations', with_bbox=True),
-    dict(
-        type='RandomRotate',
-        rotate_interval=10,
-        img_fill_val=img_fill_val),
+    # dict(
+    #     type='RandomRotate',
+    #     rotate_interval=10,
+    #     img_fill_val=img_fill_val),
     dict(
         type='PhotoMetricDistortion',
         brightness_delta=32,
@@ -125,7 +125,8 @@ data = dict(
         pipeline=test_pipeline))
 evaluation = dict(interval=20, metric='bbox')
 # optimizer
-lr = 2e-3
+# lr = 2e-3
+lr = 1e-3
 optimizer = dict(type='SGD', lr=lr, momentum=0.9, weight_decay=5e-4)
 optimizer_config = dict()
 lr_config = dict(
