@@ -61,7 +61,7 @@ train_pipeline = [
     dict(type='LoadAnnotations', with_bbox=True),
     dict(
         type='RandomRotate',
-        rotate_interval=10,
+        rotate_interval=90,
         img_fill_val=img_fill_val),
     dict(
         type='PhotoMetricDistortion',
