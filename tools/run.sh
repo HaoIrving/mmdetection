@@ -1,5 +1,7 @@
 cd ..
 
+git pull origin master
+
 # bash ./tools/dist_train.sh \
 #     ./configs/sardet/faster_rcnn_r50_c4_1x_sarship.py  \
 #     4 \
@@ -7,7 +9,8 @@ cd ..
 bash ./tools/dist_train.sh \
     ./configs/sardet/ssd_512_1x_sarship.py  \
     4 \
-    --resume-from ./work_dirs/ssd_512_1x_sarship/epoch_265.pth
+   
+# --resume-from ./work_dirs/ssd_512_1x_sarship/epoch_265.pth
 
 # benchmark fps
 # python tools/benchmark.py configs/sardet/faster_rcnn_r50_c4_1x_sarship.py work_dirs/faster_rcnn_r50_c4_1x_sarship/epoch_300.pth --fuse-conv-bn
