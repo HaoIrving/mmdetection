@@ -1,168 +1,110 @@
-norm_cfg = dict(type='BN', requires_grad=False)
+# model settings
+input_size = 512
 num_classes = 1
 model = dict(
-    type='FasterRCNN',
-    # pretrained='open-mmlab://detectron2/resnet50_caffe',
-    pretrained=None,
+    type='SingleStageDetector',
+    pretrained='open-mmlab://vgg16_caffe',
     backbone=dict(
-        type='ResNet',
-        depth=50,
-        num_stages=3,
-        strides=(1, 2, 2),
-        dilations=(1, 1, 1),
-        out_indices=(2, ),
-        # frozen_stages=1,
-        norm_cfg=dict(type='BN', requires_grad=False),
-        norm_eval=True,
-        style='caffe'),
-    rpn_head=dict(
-        type='RPNHead',
-        in_channels=1024,
-        feat_channels=1024,
+        type='SSDVGG',
+        input_size=input_size,
+        depth=16,
+        with_last_pool=False,
+        ceil_mode=True,
+        out_indices=(3, 4),
+        out_feature_indices=(22, 34),
+        l2_norm_scale=20),
+    neck=None,
+    bbox_head=dict(
+        type='SSDHead',
+        in_channels=(512, 1024, 512, 256, 256, 256, 256),
+        num_classes=num_classes,
         anchor_generator=dict(
-            type='AnchorGenerator',
-            scales=[2, 4, 8, 16, 32],
-            ratios=[0.5, 1.0, 2.0],
-            strides=[16]),
+            type='SSDAnchorGenerator',
+            scale_major=False,
+            input_size=input_size,
+            basesize_ratio_range=(0.1, 0.9),
+            strides=[8, 16, 32, 64, 128, 256, 512],
+            ratios=[[2], [2, 3], [2, 3], [2, 3], [2, 3], [2], [2]]),
         bbox_coder=dict(
             type='DeltaXYWHBBoxCoder',
-            target_means=[0.0, 0.0, 0.0, 0.0],
-            target_stds=[1.0, 1.0, 1.0, 1.0]),
-        loss_cls=dict(
-            type='CrossEntropyLoss', use_sigmoid=True, loss_weight=1.0),
-        loss_bbox=dict(type='L1Loss', loss_weight=1.0)),
-    roi_head=dict(
-        type='StandardRoIHead',
-        shared_head=dict(
-            type='ResLayer',
-            depth=50,
-            stage=3,
-            stride=2,
-            dilation=1,
-            style='caffe',
-            norm_cfg=dict(type='BN', requires_grad=False),
-            norm_eval=True),
-        bbox_roi_extractor=dict(
-            type='SingleRoIExtractor',
-            roi_layer=dict(type='RoIAlign', output_size=14, sampling_ratio=0),
-            out_channels=1024,
-            featmap_strides=[16]),
-        bbox_head=dict(
-            type='BBoxHead',
-            with_avg_pool=True,
-            roi_feat_size=7,
-            in_channels=2048,
-            num_classes=num_classes,
-            bbox_coder=dict(
-                type='DeltaXYWHBBoxCoder',
-                target_means=[0.0, 0.0, 0.0, 0.0],
-                target_stds=[0.1, 0.1, 0.2, 0.2]),
-            reg_class_agnostic=False,
-            loss_cls=dict(
-                type='CrossEntropyLoss', use_sigmoid=False, loss_weight=1.0),
-            loss_bbox=dict(type='L1Loss', loss_weight=1.0))))
+            target_means=[.0, .0, .0, .0],
+            target_stds=[0.1, 0.1, 0.2, 0.2])))
+cudnn_benchmark = True
 train_cfg = dict(
-    rpn=dict(
-        assigner=dict(
-            type='MaxIoUAssigner',
-            pos_iou_thr=0.7,
-            neg_iou_thr=0.3,
-            min_pos_iou=0.3,
-            match_low_quality=True,
-            ignore_iof_thr=-1),
-        sampler=dict(
-            type='RandomSampler',
-            num=256,
-            pos_fraction=0.5,
-            neg_pos_ub=-1,
-            add_gt_as_proposals=False),
-        allowed_border=0,
-        pos_weight=-1,
-        debug=False),
-    rpn_proposal=dict(
-        nms_across_levels=False,
-        nms_pre=12000,
-        nms_post=2000,
-        max_num=2000,
-        nms_thr=0.7,
-        min_bbox_size=0),
-    rcnn=dict(
-        assigner=dict(
-            type='MaxIoUAssigner',
-            pos_iou_thr=0.5,
-            neg_iou_thr=0.5,
-            min_pos_iou=0.5,
-            match_low_quality=False,
-            ignore_iof_thr=-1),
-        sampler=dict(
-            type='RandomSampler',
-            num=512,
-            pos_fraction=0.25,
-            neg_pos_ub=-1,
-            add_gt_as_proposals=True),
-        pos_weight=-1,
-        debug=False))
+    assigner=dict(
+        type='MaxIoUAssigner',
+        pos_iou_thr=0.5,
+        neg_iou_thr=0.5,
+        min_pos_iou=0.,
+        ignore_iof_thr=-1,
+        gt_max_assign_all=False),
+    smoothl1_beta=1.,
+    allowed_border=-1,
+    pos_weight=-1,
+    neg_pos_ratio=3,
+    debug=False)
 test_cfg = dict(
-    rpn=dict(
-        nms_across_levels=False,
-        nms_pre=6000,
-        nms_post=1000,
-        max_num=1000,
-        nms_thr=0.7,
-        min_bbox_size=0),
-    rcnn=dict(
-        score_thr=0.05,
-        nms=dict(type='nms', iou_threshold=0.5),
-        max_per_img=100))
-
+    nms=dict(type='nms', iou_threshold=0.45),
+    min_bbox_size=0,
+    score_thr=0.02,
+    max_per_img=200)
+# dataset setting
 dataset_type = 'CocoDataset'
 classes = ('ship',)
-# data_root = 'data/coco/'
 img_norm_cfg = dict(
-    mean=[98.13131, 98.13131, 98.13131], std=[1.0, 1.0, 1.0], to_rgb=False)
+    mean=[98.13131, 98.13131, 98.13131], std=[1.0, 1.0, 1.0], to_rgb=True)
+train_scale = 512
 train_pipeline = [
     dict(type='LoadTiffImageFromFile', to_float32=True),
     dict(type='LoadAnnotations', with_bbox=True),
-    dict(type='RandomSquareCrop',
-            crop_choice=[0.3, 0.45, 0.6, 0.8, 1.0]),
     dict(
         type='PhotoMetricDistortion',
         brightness_delta=32,
         contrast_range=(0.5, 1.5),
         saturation_range=(0.5, 1.5),
         hue_delta=18),
-    dict(type='RandomFlip', flip_ratio=0.5),
-    dict(type='Resize', img_scale=(640, 640), keep_ratio=False),
+    dict(
+        type='Expand',
+        mean=img_norm_cfg['mean'],
+        to_rgb=img_norm_cfg['to_rgb'],
+        ratio_range=(1, 4)),
+    dict(
+        type='MinIoURandomCrop',
+        min_ious=(0.1, 0.3, 0.5, 0.7, 0.9),
+        min_crop_size=0.3),
+    dict(type='Resize', img_scale=(train_scale, train_scale), keep_ratio=False),
     dict(type='Normalize', **img_norm_cfg),
+    dict(type='RandomFlip', flip_ratio=0.5),
     dict(type='DefaultFormatBundle'),
-    dict(type='Collect', keys=['img', 'gt_bboxes', 'gt_labels'])
+    dict(type='Collect', keys=['img', 'gt_bboxes', 'gt_labels']),
 ]
+test_scale = 512
 test_pipeline = [
     dict(type='LoadTiffImageFromFile', to_float32=True),
     dict(
         type='MultiScaleFlipAug',
-        img_scale=(640, 640),
+        img_scale=(test_scale, test_scale),
         flip=False,
         transforms=[
-            dict(type='Resize', keep_ratio=True),
-            dict(type='RandomFlip', flip_ratio=0.0),
+            dict(type='Resize', keep_ratio=False),
             dict(type='Normalize', **img_norm_cfg),
-            dict(type='Pad', size_divisor=32, pad_val=0),
             dict(type='ImageToTensor', keys=['img']),
-            dict(type='Collect', keys=['img'])
+            dict(type='Collect', keys=['img']),
         ])
 ]
-batch_per_gpu = 3
-lr = 0.00001
+batch_per_gpu = 8
 data = dict(
     samples_per_gpu=batch_per_gpu,
-    workers_per_gpu=batch_per_gpu,
+    workers_per_gpu=4,
     train=dict(
-        type=dataset_type,
-        classes=classes,
-        ann_file='data/SAR_SHIP_coco/annotations/instances_sarship_train.json',
-        img_prefix='data/SAR_SHIP_coco/train/',
-        pipeline=train_pipeline),
+        type='RepeatDataset',
+        times=5,
+        dataset=dict(
+                type=dataset_type,
+                classes=classes,
+                ann_file='data/SAR_SHIP_coco/annotations/instances_sarship_train.json',
+                img_prefix='data/SAR_SHIP_coco/train/',
+                pipeline=train_pipeline)),
     val=dict(
         type=dataset_type,
         classes=classes,
@@ -176,8 +118,10 @@ data = dict(
         img_prefix='data/SAR_SHIP_coco/test/',
         pipeline=test_pipeline))
 evaluation = dict(interval=50, metric='bbox')
-optimizer = dict(type='SGD', lr=lr, momentum=0.9, weight_decay=0.0001)
-optimizer_config = dict(grad_clip=None)
+# optimizer
+lr = 2e-3
+optimizer = dict(type='SGD', lr=lr, momentum=0.9, weight_decay=5e-4)
+optimizer_config = dict()
 lr_config = dict(
     policy='step',
     warmup='linear',

@@ -121,6 +121,7 @@ classes = ('ship',)
 # data_root = 'data/coco/'
 img_norm_cfg = dict(
     mean=[98.13131, 98.13131, 98.13131], std=[1.0, 1.0, 1.0], to_rgb=False)
+img_fill_val = 98.13131
 train_scale = 1024
 train_pipeline = [
     dict(type='LoadTiffImageFromFile', to_float32=True),
@@ -131,6 +132,10 @@ train_pipeline = [
         type='MinIoURandomCrop',
         min_ious=(0.1, 0.3, 0.5, 0.7, 0.9),
         min_crop_size=0.3),
+    dict(
+        type='RandomRotate',
+        rotate_interval=10,
+        img_fill_val=img_fill_val),
     dict(
         type='PhotoMetricDistortion',
         brightness_delta=32,

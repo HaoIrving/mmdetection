@@ -1,6 +1,7 @@
+from .auto_augment import (RandomRotate)
 from .loading import (LoadTiffImageFromFile)
 from .transforms import (RandomSquareCrop)
 
 __all__ = [
-    'LoadTiffImageFromFile', 'RandomSquareCrop'
+    'RandomRotate', 'LoadTiffImageFromFile', 'RandomSquareCrop'
 ]
