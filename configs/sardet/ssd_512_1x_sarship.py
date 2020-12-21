@@ -98,7 +98,7 @@ test_pipeline = [
             dict(type='Collect', keys=['img']),
         ])
 ]
-batch_per_gpu = 8 * 2
+batch_per_gpu = 8
 data = dict(
     samples_per_gpu=batch_per_gpu,
     workers_per_gpu=4,
@@ -126,8 +126,9 @@ data = dict(
 evaluation = dict(interval=20, metric='bbox')
 # optimizer
 # lr = 2e-3
-lr = 1e-3
+# lr = 1e-3
 # lr = 1e-3 / 2
+lr = 1e-4
 total_epochs = 300
 optimizer = dict(type='SGD', lr=lr, momentum=0.9, weight_decay=5e-4)
 optimizer_config = dict()
