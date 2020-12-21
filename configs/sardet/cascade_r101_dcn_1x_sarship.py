@@ -190,7 +190,7 @@ dataset_type = 'CocoDataset'
 classes = ('ship',)
 img_norm_cfg = dict(
     mean=[98.13131, 98.13131, 98.13131], std=[1.0, 1.0, 1.0], to_rgb=True)
-train_scale = 512 * 2
+train_scale = 512 
 train_pipeline = [
     dict(type='LoadTiffImageFromFile', to_float32=True),
     dict(type='LoadAnnotations', with_bbox=True),
@@ -215,7 +215,7 @@ train_pipeline = [
     dict(type='DefaultFormatBundle'),
     dict(type='Collect', keys=['img', 'gt_bboxes', 'gt_labels']),
 ]
-test_scale = 512 * 2
+test_scale = 512 
 test_pipeline = [
     dict(type='LoadTiffImageFromFile', to_float32=True),
     dict(
