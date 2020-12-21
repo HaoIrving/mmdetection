@@ -98,7 +98,7 @@ test_pipeline = [
             dict(type='Collect', keys=['img']),
         ])
 ]
-batch_per_gpu = 16
+batch_per_gpu = 8
 data = dict(
     samples_per_gpu=batch_per_gpu,
     workers_per_gpu=4,
@@ -125,8 +125,9 @@ data = dict(
         pipeline=test_pipeline))
 evaluation = dict(interval=20, metric='bbox')
 # optimizer
-lr = 2e-3
-# lr = 1e-3
+# lr = 2e-3
+lr = 1e-3
+total_epochs = 300 * 2
 optimizer = dict(type='SGD', lr=lr, momentum=0.9, weight_decay=5e-4)
 optimizer_config = dict()
 lr_config = dict(
@@ -134,8 +135,7 @@ lr_config = dict(
     warmup='linear',
     warmup_iters=500,
     warmup_ratio=0.001,
-    step=[200, 250])
-total_epochs = 300
+    step=[total_epochs * 2 // 3, total_epochs * 11 // 12])
 checkpoint_config = dict(interval=5)
 log_config = dict(interval=5, hooks=[dict(type='TextLoggerHook')])
 dist_params = dict(backend='nccl')
