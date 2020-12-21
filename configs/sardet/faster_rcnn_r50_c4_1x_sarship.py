@@ -133,10 +133,6 @@ train_pipeline = [
         min_ious=(0.1, 0.3, 0.5, 0.7, 0.9),
         min_crop_size=0.3),
     dict(
-        type='RandomRotate',
-        rotate_interval=10,
-        img_fill_val=img_fill_val),
-    dict(
         type='PhotoMetricDistortion',
         brightness_delta=32,
         contrast_range=(0.5, 1.5),
