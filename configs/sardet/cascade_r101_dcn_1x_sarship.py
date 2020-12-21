@@ -191,7 +191,7 @@ classes = ('ship',)
 img_norm_cfg = dict(
     mean=[98.13131, 98.13131, 98.13131], std=[1.0, 1.0, 1.0], to_rgb=True)
 img_fill_val = 98.13131
-train_scale = 512
+train_scale = 512 * 2
 train_pipeline = [
     dict(type='LoadTiffImageFromFile', to_float32=True),
     dict(type='LoadAnnotations', with_bbox=True),
@@ -220,7 +220,7 @@ train_pipeline = [
     dict(type='DefaultFormatBundle'),
     dict(type='Collect', keys=['img', 'gt_bboxes', 'gt_labels']),
 ]
-test_scale = 512
+test_scale = 512 * 2
 test_pipeline = [
     dict(type='LoadTiffImageFromFile', to_float32=True),
     dict(
@@ -234,7 +234,7 @@ test_pipeline = [
             dict(type='Collect', keys=['img']),
         ])
 ]
-batch_per_gpu = 6
+batch_per_gpu = 8
 lr = 0.001
 total_epochs = 300
 data = dict(
