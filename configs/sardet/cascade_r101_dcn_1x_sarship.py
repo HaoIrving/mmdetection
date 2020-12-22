@@ -230,7 +230,7 @@ test_pipeline = [
         ])
 ]
 batch_per_gpu = 8
-lr = 1e-3 / 2
+lr = 2e-3 
 total_epochs = 300
 data = dict(
     samples_per_gpu=batch_per_gpu,

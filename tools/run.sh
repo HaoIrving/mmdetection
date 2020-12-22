@@ -24,4 +24,4 @@ bash ./tools/dist_train.sh \
 
 # log
 # scp -i qiaohong~qiaohong_sar -P 25392 root@172.18.41.31:/root/data/SAR/mmdetection/work_dirs/ssd_512_1x_sarship/20201221_103501.log.json /home/sun/projects/mmdetection/work_dirs
-# scp -i qiaohong~qiaohong_sar -P 25392 root@172.18.41.31:/root/data/SAR/mmdetection/work_dirs/cascade_r101_dcn_1x_sarship/20201221_210530.log.json /home/sun/projects/mmdetection/work_dirs
+# scp -i qiaohong~qiaohong_sar -P 25392 root@172.18.41.31:/root/data/SAR/mmdetection/work_dirs/cascade_r101_dcn_1x_sarship/20201222_013502.log.json /home/sun/projects/mmdetection/work_dirs
