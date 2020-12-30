@@ -53,16 +53,9 @@ def convert(xml_list, xml_dir, json_file, imid_bid):
         xml_f = os.path.join(xml_dir, line + '.xml')
         tree = ET.parse(xml_f)
         root = tree.getroot()
-        # path = get(root, 'path')
-        # if len(path) == 1:
-        #     filename = os.path.basename(path[0].text)
-        # elif len(path) == 0:
-        #     filename = get_and_check(root, 'filename', 1).text
-        # else:
-        #     raise NotImplementedError('%d paths found in %s'%(len(path), line))
-        ## The filename must be a number
-        # image_id = get_filename_as_int(filename)
-        filename = line + '.tiff'
+
+        # filename = line + '.tiff'
+        filename = line + '.jpg'
         image_id = imid_bid['image_id']
         imid_bid['image_id'] += 1
 
@@ -100,6 +93,7 @@ def convert(xml_list, xml_dir, json_file, imid_bid):
                    'segmentation': []}
             json_dict['annotations'].append(ann)
 
+
     for cate, cid in categories.items():
         cat = {'supercategory': 'none', 'id': cid, 'name': cate}
         json_dict['categories'].append(cat)
@@ -114,19 +108,29 @@ if __name__ == '__main__':
     #  python voc2coco.py xmllist.txt ../Annotations output.json
     import os
     import os.path as osp
-    out_dir = '/home/sun/projects/sar/SAR_SHIP_coco'
+    # out_dir = '/home/sun/projects/sar/SAR_SHIP_coco'
+    out_dir = '/home/sun/projects/sar/SSDD/SSDD_coco'
     out_an = osp.join(out_dir, 'annotations')
-    out_train = osp.join(out_dir, 'train')
-    out_test = osp.join(out_dir, 'test')
-    for path in [out_dir, out_an, out_train, out_test]:
+    # out_train = osp.join(out_dir, 'train')
+    # out_test = osp.join(out_dir, 'test')
+    for path in [out_dir, out_an]:#, out_train, out_test]:
         if not osp.exists(path):
             os.mkdir(path)
 
-    sc_dirs = {'train': "/home/sun/projects/sar/SAR_SHIP_train", 'test': "/home/sun/projects/sar/SAR_SHIP_test"}
-    imid_bid = {"image_id": 1, "bnd_id": 1}
-    for split in ['train', 'test']:
-        sc_dir = sc_dirs[split]
-        xml_list = osp.join(sc_dir, 'img_list.txt') 
+    # # sc_dirs = {'train': "/home/sun/projects/sar/SAR_SHIP_train", 'test': "/home/sun/projects/sar/SAR_SHIP_test"}
+    # sc_dirs = {'train': "/home/sun/projects/sar/SSDD/SSDD_train", 'test': "/home/sun/projects/sar/SSDD/SSDD_test"}
+    # imid_bid = {"image_id": 1, "bnd_id": 1}  # 1160, 2551
+    # for split in ['train', 'test']:
+    #     sc_dir = sc_dirs[split]
+    #     xml_list = osp.join(sc_dir, 'img_list.txt') 
+    #     xml_dir = osp.join(sc_dir, "annotations")
+    #     json_file = osp.join(out_an, f'instances_sarship_{split}.json')
+    #     convert(xml_list, xml_dir, json_file, imid_bid)
+
+    sc_dir = "/home/sun/projects/sar/SSDD/SSDD_test"
+    imid_bid = {"image_id": 2000, "bnd_id": 3000}
+    for split in ['inshore', 'offshore']:
+        xml_list = osp.join(sc_dir, f'img_list_{split}.txt') 
         xml_dir = osp.join(sc_dir, "annotations")
-        json_file = osp.join(out_an, f'instances_sarship_{split}.json')
+        json_file = osp.join(out_an, f'instances_sarship_test_{split}.json')
         convert(xml_list, xml_dir, json_file, imid_bid)
