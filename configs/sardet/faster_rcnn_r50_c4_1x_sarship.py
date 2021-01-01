@@ -197,7 +197,7 @@ lr_config = dict(
     warmup='linear',
     warmup_iters=500,
     warmup_ratio=0.001,
-    step=[total_epochs * 2 // 3, total_epochs * 8 // 9)]
+    step=[total_epochs * 2 // 3, total_epochs * 8 // 9])
 checkpoint_config = dict(interval=5)
 log_config = dict(interval=5, hooks=[dict(type='TextLoggerHook')])
 dist_params = dict(backend='nccl')
