@@ -2,8 +2,8 @@ norm_cfg = dict(type='BN', requires_grad=False)
 num_classes = 1
 model = dict(
     type='FasterRCNN',
-    pretrained='open-mmlab://detectron2/resnet50_caffe',
-    # pretrained=None,
+    # pretrained='open-mmlab://detectron2/resnet50_caffe',
+    pretrained=None,
     backbone=dict(
         type='ResNet',
         depth=50,
