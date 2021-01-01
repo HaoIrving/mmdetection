@@ -112,80 +112,82 @@ test_cfg = dict(
         min_bbox_size=0),
     rcnn=dict(
         score_thr=0.05,
-        # nms=dict(type='nms', iou_threshold=0.03),
-        nms=dict(type='soft_nms', iou_threshold=0.01),
+        nms=dict(type='nms', iou_threshold=0.5),
         max_per_img=100))
 
 dataset_type = 'CocoDataset'
 classes = ('ship',)
-# data_root = 'data/coco/'
+data_root = 'data/SSDD/SSDD_coco/'
 img_norm_cfg = dict(
     mean=[98.13131, 98.13131, 98.13131], std=[1.0, 1.0, 1.0], to_rgb=False)
-img_fill_val = 98.13131
-train_scale = 1024
+train_scale = 512
 train_pipeline = [
-    dict(type='LoadTiffImageFromFile', to_float32=True),
+    # dict(type='LoadTiffImageFromFile', to_float32=True),
+    dict(type='LoadImageFromFile', to_float32=True),
     dict(type='LoadAnnotations', with_bbox=True),
-    # dict(type='RandomSquareCrop',
-    #         crop_ratio_range=[0.3, 1.0]),
-    dict(
-        type='MinIoURandomCrop',
-        min_ious=(0.1, 0.3, 0.5, 0.7, 0.9),
-        min_crop_size=0.3),
     dict(
         type='PhotoMetricDistortion',
         brightness_delta=32,
         contrast_range=(0.5, 1.5),
         saturation_range=(0.5, 1.5),
         hue_delta=18),
-    dict(type='RandomFlip', flip_ratio=0.5),
+    dict(
+        type='Expand',
+        mean=img_norm_cfg['mean'],
+        to_rgb=img_norm_cfg['to_rgb'],
+        ratio_range=(1, 4)),
+    dict(
+        type='MinIoURandomCrop',
+        min_ious=(0.1, 0.3, 0.5, 0.7, 0.9),
+        min_crop_size=0.3),
     dict(type='Resize', img_scale=(train_scale, train_scale), keep_ratio=False),
     dict(type='Normalize', **img_norm_cfg),
+    dict(type='RandomFlip', flip_ratio=0.5),
     dict(type='DefaultFormatBundle'),
-    dict(type='Collect', keys=['img', 'gt_bboxes', 'gt_labels'])
+    dict(type='Collect', keys=['img', 'gt_bboxes', 'gt_labels']),
 ]
-test_scale = 500 * 2
+
+test_scale = 512
 test_pipeline = [
-    dict(type='LoadTiffImageFromFile', to_float32=True),
+    # dict(type='LoadTiffImageFromFile', to_float32=True),
+    dict(type='LoadImageFromFile', to_float32=True),
     # dict(type='LoadAnnotations', with_bbox=True),
     dict(
         type='MultiScaleFlipAug',
         img_scale=(test_scale, test_scale),
         flip=False,
         transforms=[
-            dict(type='Resize', keep_ratio=True),
-            dict(type='RandomFlip', flip_ratio=0.0),
+            dict(type='Resize', keep_ratio=False),
             dict(type='Normalize', **img_norm_cfg),
-            dict(type='Pad', size_divisor=32, pad_val=0),
             dict(type='ImageToTensor', keys=['img']),
             # dict(type='Collect', keys=['img', 'gt_bboxes', 'gt_labels']),
-            dict(type='Collect', keys=['img'])
+            dict(type='Collect', keys=['img']),
         ])
 ]
-batch_per_gpu = 6
-lr = 0.001
-total_epochs = 600
 
+batch_per_gpu = 8
+lr = 0.001
+total_epochs = 300
 data = dict(
     samples_per_gpu=batch_per_gpu,
     workers_per_gpu=4,
     train=dict(
         type=dataset_type,
         classes=classes,
-        ann_file='data/SAR_SHIP_coco/annotations/instances_sarship_train.json',
-        img_prefix='data/SAR_SHIP_coco/train/',
+        ann_file=data_root + 'annotations/instances_sarship_train.json',
+        img_prefix=data_root + 'train/',
         pipeline=train_pipeline),
     val=dict(
         type=dataset_type,
         classes=classes,
-        ann_file='data/SAR_SHIP_coco/annotations/instances_sarship_test.json',
-        img_prefix='data/SAR_SHIP_coco/test/',
+        ann_file=data_root + 'annotations/instances_sarship_test.json',
+        img_prefix=data_root + 'test/',
         pipeline=test_pipeline),
     test=dict(
         type=dataset_type,
         classes=classes,
-        ann_file='data/SAR_SHIP_coco/annotations/instances_sarship_test.json',
-        img_prefix='data/SAR_SHIP_coco/test/',
+        ann_file=data_root + 'annotations/instances_sarship_test.json',
+        img_prefix=data_root + 'test/',
         pipeline=test_pipeline))
 evaluation = dict(interval=20, metric='bbox')
 optimizer = dict(type='SGD', lr=lr, momentum=0.9, weight_decay=0.0001)
@@ -195,7 +197,7 @@ lr_config = dict(
     warmup='linear',
     warmup_iters=500,
     warmup_ratio=0.001,
-    step=[total_epochs * 2 // 3, total_epochs * 5 // 6])
+    step=[total_epochs * 2 // 3, total_epochs * 8 // 9)
 checkpoint_config = dict(interval=5)
 log_config = dict(interval=5, hooks=[dict(type='TextLoggerHook')])
 dist_params = dict(backend='nccl')
