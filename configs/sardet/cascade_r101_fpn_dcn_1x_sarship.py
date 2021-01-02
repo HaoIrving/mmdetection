@@ -193,32 +193,43 @@ img_norm_cfg = dict(
     mean=[98.13131, 98.13131, 98.13131], std=[1.0, 1.0, 1.0], to_rgb=True)
 train_scale = 512 
 train_pipeline = [
-    dict(type='LoadImageFromFile'),
+    dict(type='LoadImageFromFile', to_float32=True),
     dict(type='LoadAnnotations', with_bbox=True),
-    dict(type='Resize', img_scale=(train_scale, train_scale), keep_ratio=True),
-    dict(type='RandomFlip', flip_ratio=0.5),
+    dict(
+        type='PhotoMetricDistortion',
+        brightness_delta=32,
+        contrast_range=(0.5, 1.5),
+        saturation_range=(0.5, 1.5),
+        hue_delta=18),
+    dict(
+        type='Expand',
+        mean=img_norm_cfg['mean'],
+        to_rgb=img_norm_cfg['to_rgb'],
+        ratio_range=(1, 4)),
+    dict(
+        type='MinIoURandomCrop',
+        min_ious=(0.1, 0.3, 0.5, 0.7, 0.9),
+        min_crop_size=0.3),
+    dict(type='Resize', img_scale=(train_scale, train_scale), keep_ratio=False),
     dict(type='Normalize', **img_norm_cfg),
-    dict(type='Pad', size_divisor=32),
+    dict(type='RandomFlip', flip_ratio=0.5),
     dict(type='DefaultFormatBundle'),
     dict(type='Collect', keys=['img', 'gt_bboxes', 'gt_labels']),
 ]
 test_scale = 512 
 test_pipeline = [
-    dict(type='LoadImageFromFile'),
+    dict(type='LoadImageFromFile', to_float32=True),
     dict(
         type='MultiScaleFlipAug',
         img_scale=(test_scale, test_scale),
         flip=False,
         transforms=[
-            dict(type='Resize', keep_ratio=True),
-            dict(type='RandomFlip'),
+            dict(type='Resize', keep_ratio=False),
             dict(type='Normalize', **img_norm_cfg),
-            dict(type='Pad', size_divisor=32),
             dict(type='ImageToTensor', keys=['img']),
             dict(type='Collect', keys=['img']),
         ])
 ]
-
 batch_per_gpu = 2
 workers_per_gpu = 2
 lr = 0.02
