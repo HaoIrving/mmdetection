@@ -188,11 +188,12 @@ test_cfg = dict(
 # dataset setting
 dataset_type = 'CocoDataset'
 classes = ('ship',)
+data_root = 'data/SSDD/SSDD_coco/'
 img_norm_cfg = dict(
     mean=[98.13131, 98.13131, 98.13131], std=[1.0, 1.0, 1.0], to_rgb=True)
 train_scale = 512 
 train_pipeline = [
-    dict(type='LoadTiffImageFromFile', to_float32=True),
+    dict(type='LoadImageFromFile', to_float32=True),
     dict(type='LoadAnnotations', with_bbox=True),
     dict(
         type='PhotoMetricDistortion',
@@ -217,7 +218,7 @@ train_pipeline = [
 ]
 test_scale = 512 
 test_pipeline = [
-    dict(type='LoadTiffImageFromFile', to_float32=True),
+    dict(type='LoadImageFromFile', to_float32=True),
     dict(
         type='MultiScaleFlipAug',
         img_scale=(test_scale, test_scale),
@@ -229,29 +230,30 @@ test_pipeline = [
             dict(type='Collect', keys=['img']),
         ])
 ]
-batch_per_gpu = 8
-lr = 2e-3 
+batch_per_gpu = 2
+workers_per_gpu = 2
+lr = 0.02
 total_epochs = 300
 data = dict(
     samples_per_gpu=batch_per_gpu,
-    workers_per_gpu=4,
+    workers_per_gpu=workers_per_gpu,
     train=dict(
         type=dataset_type,
         classes=classes,
-        ann_file='data/SAR_SHIP_coco/annotations/instances_sarship_train.json',
-        img_prefix='data/SAR_SHIP_coco/train/',
+        ann_file=data_root + 'annotations/instances_sarship_train.json',
+        img_prefix=data_root + 'train/',
         pipeline=train_pipeline),
     val=dict(
         type=dataset_type,
         classes=classes,
-        ann_file='data/SAR_SHIP_coco/annotations/instances_sarship_test.json',
-        img_prefix='data/SAR_SHIP_coco/test/',
+        ann_file=data_root + 'annotations/instances_sarship_test.json',
+        img_prefix=data_root + 'test/',
         pipeline=test_pipeline),
     test=dict(
         type=dataset_type,
         classes=classes,
-        ann_file='data/SAR_SHIP_coco/annotations/instances_sarship_test.json',
-        img_prefix='data/SAR_SHIP_coco/test/',
+        ann_file=data_root + 'annotations/instances_sarship_test.json',
+        img_prefix=data_root + 'test/',
         pipeline=test_pipeline))
 evaluation = dict(interval=20, metric='bbox')
 
