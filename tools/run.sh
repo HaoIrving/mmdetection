@@ -11,7 +11,7 @@ bash ./tools/dist_train.sh \
 #     4 \
 
 bash ./tools/dist_train.sh \
-    ./configs/sardet/ssd_512_1x_sarship.py  \
+    ./configs/sardet/cascade_r101_fpn_dcn_1x_sarship.py  \
     4 \
    
 # --resume-from ./work_dirs/ssd_512_1x_sarship/epoch_265.pth
