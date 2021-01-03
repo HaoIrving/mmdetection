@@ -129,7 +129,7 @@ evaluation = dict(interval=10, metric='bbox')
 # lr = 1e-3 / 2  # 0.936 280
 # lr = 2e-3  # 0.955 300
 # lr = 1e-3  # 0.947 280
-lr = 3e-3  
+lr = 2.5e-3  
 total_epochs = 300
 optimizer = dict(type='SGD', lr=lr, momentum=0.9, weight_decay=5e-4)
 optimizer_config = dict()
