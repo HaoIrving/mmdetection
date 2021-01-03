@@ -244,7 +244,7 @@ data = dict(
         ann_file=data_root + 'annotations/instances_sarship_test.json',
         img_prefix=data_root + 'test/',
         pipeline=test_pipeline))
-evaluation = dict(interval=20, metric='bbox')
+evaluation = dict(interval=5, metric='bbox')
 
 # optimizer
 optimizer = dict(type='SGD', lr=lr, momentum=0.9, weight_decay=0.0001)
