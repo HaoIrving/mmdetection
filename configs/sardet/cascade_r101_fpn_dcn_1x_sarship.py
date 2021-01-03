@@ -221,8 +221,8 @@ test_pipeline = [
 
 batch_per_gpu = 2
 workers_per_gpu = 2
-lr = 0.01
-total_epochs = 300
+lr = 0.01  # 0.936 60
+total_epochs = 90
 data = dict(
     samples_per_gpu=batch_per_gpu,
     workers_per_gpu=workers_per_gpu,
