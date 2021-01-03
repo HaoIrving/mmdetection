@@ -30,8 +30,9 @@ test_pipeline = [
             dict(type='Collect', keys=['img'])
         ])
 ]
-lr = 0.01  # 0.925 60
-total_epochs = 90
+# lr = 0.01  # 0.925 60
+lr = 0.02  # 0.925 60
+total_epochs = 300
 
 data = dict(
     samples_per_gpu=2,
