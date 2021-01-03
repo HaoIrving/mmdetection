@@ -126,8 +126,8 @@ data = dict(
         pipeline=test_pipeline))
 evaluation = dict(interval=10, metric='bbox')
 # optimizer
-lr = 2e-3
-# lr = 1e-3
+# lr = 2e-3  # 0.955 300
+lr = 1e-3
 # lr = 1e-3 / 2  # 0.936 280
 total_epochs = 300
 optimizer = dict(type='SGD', lr=lr, momentum=0.9, weight_decay=5e-4)
