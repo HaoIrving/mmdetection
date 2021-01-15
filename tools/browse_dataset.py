@@ -55,6 +55,7 @@ def main():
         filename = os.path.join(args.output_dir,
                                 Path(item['filename']).name
                                 ) if args.output_dir is not None else None
+        print('\n', Path(item['filename']).name)
         mmcv.imshow_det_bboxes(
             item['img'].astype(np.uint8),
             item['gt_bboxes'],
