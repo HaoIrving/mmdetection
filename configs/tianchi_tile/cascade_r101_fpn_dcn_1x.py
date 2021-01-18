@@ -1,4 +1,4 @@
-num_classes = 1
+num_classes = 6
 model = dict(
     type='CascadeRCNN',
     pretrained='torchvision://resnet101',
@@ -190,7 +190,7 @@ dataset_type = 'CocoDataset'
 classes = ('1', '2', '3', '4', '5', '6')
 data_root = 'data/tianchi_tile_coco/'
 img_norm_cfg = dict(
-    mean=[103.530, 116.280, 123.675], std=[1.0, 1.0, 1.0], to_rgb=False)
+    mean=[123.675, 116.28, 103.53], std=[58.395, 57.12, 57.375], to_rgb=True)
 train_pipeline = [
     dict(type='LoadImageFromFile'),
     dict(type='LoadAnnotations', with_bbox=True),
@@ -201,11 +201,13 @@ train_pipeline = [
     dict(type='DefaultFormatBundle'),
     dict(type='Collect', keys=['img', 'gt_bboxes', 'gt_labels']),
 ]
+test_scale = 800 
 test_pipeline = [
     dict(type='LoadImageFromFile'),
+    # dict(type='LoadAnnotations', with_bbox=True),
     dict(
         type='MultiScaleFlipAug',
-        img_scale=(1333, 800),
+        img_scale=[(test_scale, test_scale)],#,(1333, 800),(500,500)],
         flip=False,
         transforms=[
             dict(type='Resize', keep_ratio=True),
@@ -213,12 +215,13 @@ test_pipeline = [
             dict(type='Normalize', **img_norm_cfg),
             dict(type='Pad', size_divisor=32),
             dict(type='ImageToTensor', keys=['img']),
+            # dict(type='Collect', keys=['img', 'gt_bboxes', 'gt_labels']),
             dict(type='Collect', keys=['img']),
         ])
 ]
 
-batch_per_gpu = 2
-workers_per_gpu = 2
+batch_per_gpu = 6
+workers_per_gpu = 3
 lr = 0.02  # 0.944 40
 total_epochs = 12
 data = dict(
@@ -227,22 +230,22 @@ data = dict(
     train=dict(
         type=dataset_type,
         classes=classes,
-        ann_file=data_root + 'annotations/instances_sarship_train.json',
-        img_prefix=data_root + 'train/',
+        ann_file=data_root + 'annotations/instances_train2017.json',
+        img_prefix=data_root + 'train2017/',
         pipeline=train_pipeline),
     val=dict(
         type=dataset_type,
         classes=classes,
-        ann_file=data_root + 'annotations/instances_sarship_test.json',
-        img_prefix=data_root + 'test/',
+        ann_file=data_root + 'annotations/instances_val2017.json',
+        img_prefix=data_root + 'val2017/',
         pipeline=test_pipeline),
     test=dict(
         type=dataset_type,
         classes=classes,
-        ann_file=data_root + 'annotations/instances_sarship_test.json',
-        img_prefix=data_root + 'test/',
+        ann_file=data_root + 'annotations/instances_val2017.json',
+        img_prefix=data_root + 'val2017/',
         pipeline=test_pipeline))
-evaluation = dict(interval=5, metric='bbox')
+evaluation = dict(interval=1, metric='bbox')
 
 # optimizer
 optimizer = dict(type='SGD', lr=lr, momentum=0.9, weight_decay=0.0001)

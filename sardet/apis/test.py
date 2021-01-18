@@ -49,6 +49,7 @@ def single_gpu_test(model,
                             bbox_color='green',
                             text_color='green',
                             thickness=2,
+                            font_scale=2,
                             class_names=dataset.CLASSES,
                             show=False,
                             out_file=None)

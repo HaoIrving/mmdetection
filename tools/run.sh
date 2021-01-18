@@ -1,9 +1,12 @@
 cd ..
 
-bash ./tools/dist_train.sh \
+CUDA_VISIBLE_DEVICES=1,2 bash ./tools/dist_train.sh \
     ./configs/sardet/atss_r101_fpn_sarship.py  \
     4 \
-
+CUDA_VISIBLE_DEVICES=1,2 bash ./tools/dist_train.sh \
+    ./configs/tianchi_tile/cascade_r101_fpn_dcn_1x.py  \
+    2 \
+CUDA_VISIBLE_DEVICES=1,2,3 bash tools/dist_test.sh configs/tianchi_tile/cascade_r101_fpn_dcn_1x.py work_dirs/cascade_r101_fpn_dcn_1x/epoch_11.pth 3
 # git pull origin master
 
 bash ./tools/dist_train.sh \

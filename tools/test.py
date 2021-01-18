@@ -100,7 +100,7 @@ def main():
     args = parse_args()
 
     args.show_score_thr = 0.3
-    args.show = True
+    # args.show = True
 
     args.eval = 'bbox'
     
