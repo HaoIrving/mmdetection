@@ -9,14 +9,17 @@ CUDA_VISIBLE_DEVICES=1,2 bash ./tools/dist_train.sh \
 CUDA_VISIBLE_DEVICES=1,2,3 bash tools/dist_test.sh configs/tianchi_tile/cascade_r101_fpn_dcn_1x.py work_dirs/cascade_r101_fpn_dcn_1x/epoch_11.pth 3
 # git pull origin master
 
-bash ./tools/dist_train.sh \
-    ./configs/sardet/ssd_512_1x_sarship.py  \
-    4 \
 
+bash ./tools/dist_train.sh \
+    ./configs/sardet/faster_rcnn_r50_c4_1x_sarship.py\
+    4 \
+   
 bash ./tools/dist_train.sh \
     ./configs/sardet/cascade_r101_fpn_dcn_1x_sarship.py  \
     4 \
-   
+bash ./tools/dist_train.sh \
+    ./configs/sardet/ssd_512_1x_sarship.py  \
+    4 \
 # --resume-from ./work_dirs/ssd_512_1x_sarship/epoch_265.pth
 
 # benchmark fps

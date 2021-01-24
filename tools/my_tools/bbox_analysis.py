@@ -13,7 +13,7 @@ from math import sqrt
 # 读取数据
 # ann_json = 'instances_train2017.json'
 ann_json = '/home/sun/projects/mmdetection/data/SSDD/SSDD_coco/annotations/instances_sarship_train.json'
-ann_json = '/home/sun/projects/mmdetection/data/SSDD/SSDD_coco/annotations/instances_sarship_test.json'
+# ann_json = '/home/sun/projects/mmdetection/data/SSDD/SSDD_coco/annotations/instances_sarship_test.json'
 with open(ann_json) as f:
     ann=json.load(f)
 
@@ -47,7 +47,7 @@ box_wh_unique = sorted(list(set(box_wh)))
 box_wh_count=[box_wh.count(i) for i in box_wh_unique]
 total = len(size)  # train: 2007, test: 544
 box_wh_ratio = [i / total for i in box_wh_count]
-print(box_wh_ratio[0] + box_wh_ratio[1])  # 0.8076731439960139
+print(box_wh_ratio[0] + box_wh_ratio[1])  # aspect ratio, top 2, train: 0.8076731439960139, test: 0.8216911764705882
 
 size_unique = sorted(list(set(size)))
 size_count=[size.count(i) for i in size_unique]
@@ -70,17 +70,17 @@ axs[0].set_xscale('log', basex=sqrt(2))
 axs[0].set_xticks(xtick)
 axs[0].set_xticklabels(xtick_label_a)
 axs[0].set_xlim(4, 256)
-axs[0].set_ylim(0, 600)
-axs[0].set_xlabel('(a) ground-truth box size (pixel)')
+# axs[0].set_ylim(0, 600)
+axs[0].set_xlabel('ground-truth box size (pixel)')
 axs[0].set_ylabel('#count')
 
 axs[1].bar(box_wh_unique, box_wh_count, width=0.5, color='b', edgecolor='black', lw=1)
-axs[1].set_xlabel('(b) ground-truth box relative aspect ratio')
+axs[1].set_xlabel('ground-truth box relative aspect ratio')
 axs[1].set_ylabel('#count')
 axs[1].set_xticks(box_wh_unique)
 axs[1].set_xticklabels(xtick_label_b, rotation=0)
 # axs[1].set_xlim(0, 8)
-axs[1].set_ylim(0, 1000)
+# axs[1].set_ylim(0, 1000)
 
 fig.tight_layout()
 # plt.subplots_adjust(left=0.15)  
@@ -95,7 +95,7 @@ for s, ratio in zip(bins, n):
     print('{:.2f}'.format(s), '{:.2f}'.format(ratio / total * 100))
     if 16 <= s < 128:
         cumsum += ratio / total * 100
-print(cumsum)
+print(cumsum) # box size [16, 128), train: 85.65022421524664, test: 81.24999999999999
 print(bins)
 print(n * 100)
 ax.set_xscale('log', base=2)
