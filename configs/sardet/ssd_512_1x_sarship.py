@@ -127,7 +127,7 @@ data = dict(
 evaluation = dict(interval=10, metric='bbox')
 # optimizer
 # lr = 1e-3 / 2  # 0.936 280
-lr = 2e-3  # 0.955 300
+lr = 2e-3  # 290
 # lr = 1e-3  # 0.947 280
 # lr = 2.5e-3  # 0.942 210
 total_epochs = 300
