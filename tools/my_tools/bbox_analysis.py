@@ -12,8 +12,8 @@ from math import sqrt
 
 # 读取数据
 # ann_json = 'instances_train2017.json'
-ann_json = '/home/sun/projects/mmdetection/data/SSDD/SSDD_coco/annotations/instances_sarship_train.json'
-# ann_json = '/home/sun/projects/mmdetection/data/SSDD/SSDD_coco/annotations/instances_sarship_test.json'
+# ann_json = '/home/sun/projects/mmdetection/data/SSDD/SSDD_coco/annotations/instances_sarship_train.json'
+ann_json = '/home/sun/projects/mmdetection/data/SSDD/SSDD_coco/annotations/instances_sarship_test.json'
 with open(ann_json) as f:
     ann=json.load(f)
 
