@@ -100,28 +100,29 @@ test_pipeline = [
         ])
 ]
 batch_per_gpu = 8
+
+test_file = 'annotations/instances_sarship_test.json'
+# test_file = 'annotations/instances_sarship_test_inshore.json'
+test_file = 'annotations/instances_sarship_test_offshore.json'
 data = dict(
     samples_per_gpu=batch_per_gpu,
     workers_per_gpu=3,
     train=dict(
-        type='RepeatDataset',
-        times=1,
-        dataset=dict(
-                type=dataset_type,
-                classes=classes,
-                ann_file=data_root + 'annotations/instances_sarship_train.json',
-                img_prefix=data_root + 'train/',
-                pipeline=train_pipeline)),
+        type=dataset_type,
+        classes=classes,
+        ann_file=data_root + 'annotations/instances_sarship_train.json',
+        img_prefix=data_root + 'train/',
+        pipeline=train_pipeline),
     val=dict(
         type=dataset_type,
         classes=classes,
-        ann_file=data_root + 'annotations/instances_sarship_test.json',
+        ann_file=data_root + test_file,
         img_prefix=data_root + 'test/',
         pipeline=test_pipeline),
     test=dict(
         type=dataset_type,
         classes=classes,
-        ann_file=data_root + 'annotations/instances_sarship_test.json',
+        ann_file=data_root + test_file,
         img_prefix=data_root + 'test/',
         pipeline=test_pipeline))
 evaluation = dict(interval=10, metric='bbox')
